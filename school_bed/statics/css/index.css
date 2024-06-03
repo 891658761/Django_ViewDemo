@@ -1,0 +1,221 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+html{
+	font-size: 100px; //rem布局
+}
+body{
+	background: url("../images/bg.jpg") repeat top center;
+}
+
+header{
+	width: 100%;
+	height: 1rem;
+	position: relative;
+	background: url("../images/title.png") repeat top center;
+}
+header h1{
+	font-size: 0.3rem;
+	color: #fff;
+	text-align: center;
+	height: 1rem;
+	line-height: 1rem;
+}
+header span{
+	font-size: 0.16rem;
+	color: #ddd;
+	position: absolute;
+	right: 15px;
+	top: 0.8rem;
+
+}
+
+.mainbox{
+	width: 100%;
+}
+.mainbox .left{
+	width: 25%;
+	float: left;
+	margin-left: 1%;
+
+}
+.mainbox .center{
+	width: 45%;
+	float: left;
+	margin-left: 1%;
+
+}
+.mainbox .right{
+	width: 25%;
+	float: left;
+	margin-left: 1%;
+
+}
+
+.mainbox .panel{
+	width: 100%;
+	height: 2rem;
+	margin-top: 15px;
+	background: url("../images/line(1).png") rgba(255,255,255,0.05) no-repeat top center;
+	position: relative;
+}
+
+.mainbox .bigpanel{
+	width: 100%;
+	height: 95%;
+	margin-top: 15px;
+	background: url("../images/line(1).png") rgba(255,255,255,0.05) no-repeat top center;
+	position: relative;
+}
+
+.mainbox .panel .footer{
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+}
+
+.center .data{
+	width: 100%;
+	height: 1.3rem;
+	margin-bottom: 15px;
+	padding-top:15px;
+	background: rgba(101,132,226,0.1);
+}
+.center .num .cent{
+	display: flex;
+	flex-direction: row;
+	width: 45%;
+	float: left;
+	margin-left:3%;
+	height: 1.1rem;
+	line-height: 1.1rem;
+	font-size: 0.4rem;
+	flex: 1;
+	justify-content: center;
+	color: #ffeb7b;
+	border: 1px solid rgba(25,186,137,0.17);
+}
+
+.center .num .cent .img1{
+	width: 100px;
+	height: 1rem;
+	background: url("../images/user.png") no-repeat center center;
+	background-size: 100% 100%;
+	text-align: center;
+}
+.center .num .cent .img2{
+	width: 100px;
+	height: 100px;
+	background: url("../images/inter.png") no-repeat center center;
+	background-size: 100% 100%;
+	text-align: center;
+}
+.center .num .cent .number{
+	text-align: center;
+}
+
+.center .title{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 0.5rem;
+	line-height: 0.5rem;
+	font-size: 0.16rem;
+	color: #fff;
+}
+.center .title div{
+	flex: 1;
+	text-align: center;
+}
+
+.center .map{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 5rem;
+	position: relative;
+}
+.map .node{
+	width: 4.5rem;
+	height: 4.5rem;
+	background: url("../images/jt.png");
+	background-size: 100% 100%;
+	opacity: 0.2;
+	position: absolute;
+	animation: an1 15s linear infinite;
+}
+.map .ball{
+	width: 4rem;
+	height: 4rem;
+	background: url("../images/world.png");
+	background-size: 100% 100%;
+	position: absolute;
+	opacity: 0.1;
+}
+
+@keyframes an1{
+	from{
+		transform: rotate(0deg);
+	}
+	to{
+		transform: rotate(360deg);
+	}
+}
+
+
+.con_div_text{
+    height: 100%;
+    width: 94%;
+	margin-left:3%;
+}
+.con_div_text01{
+    width: 50%;
+    height: 100%;
+}
+.text01_img{
+    width: 80px;
+    height: 80px;
+    margin-left: 15%;
+  	margin-top: 5%;
+}
+.text01_div{
+    margin-top: 5%;
+    margin-left: 5%;
+    text-align: center;
+
+}
+.text01_div p{
+    line-height: 35px;
+	background-image:-webkit-linear-gradient(bottom,red,#fd8403,yellow);
+	-webkit-background-clip:text;
+	-webkit-text-fill-color:transparent;
+}
+.text01_div p:nth-child(1){
+    font-size: 13px;
+    color: #ffffff;
+}
+.text01_div p:nth-child(2){
+    font-size: 28px;
+    color: #ffff43;
+    font-weight: 600;
+
+}
+.lefti{
+    float: left;
+}
+.righti{
+    float: right;
+}
+.cleari{
+    clear: both;
+}
+
+.text_right{
+    text-align: right;
+}
+
+.sky{
+    color: #25f3e6 !important;
+}

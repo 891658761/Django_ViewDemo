@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Echarts大屏可视化</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+	<!--引入jquery-->
+	<script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+	<script src="{% static 'js/echarts.min.js' %}"></script>
+</head>
+<body>
+	<header>
+		<h1>网易我的世界开发者后台数据可视化展板</h1>
+	</header>
+	<div class="mainbox">
+		<div class="left">
+			<div class="panel" id='def'>
+				<div class="footer"></div>
+			</div>
+			<div class="panel" id="def2">
+				<div class="footer"></div>
+			</div>
+			<div class="panel" id="def3">
+				<div class="footer"></div>
+			</div>
+		 </div>
+		<div class="center">
+			<div class="map">
+				<div class="node"></div>
+				<div class="bigpanel"> 
+					<div class="footer"></div>
+				</div>
+				<div class="ball"></div>
+			</div>
+			<div class="data">
+				<div class="con_div_text lefti">
+					<div class="con_div_text01 lefti">
+						<img src="{% static 'images/user.png'%}" class="lefti text01_img"/>
+						<div class="lefti text01_div">
+							<p>上月钻石收入</p>
+							<p id="tomoonDiamond">获取中...</p>
+						</div>
+					</div>
+					<div class="con_div_text01 righti">
+						<img src="{% static 'images/inter.png' %}" class="lefti text01_img"/>
+						<div class="lefti text01_div">
+							<p>上月预计收入(42%分成)</p>
+							<p id="tomoonMoney">获取中...</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="right">
+			<div class="panel" id='skill'> 
+				<div class="footer"></div>
+			</div>
+			<div class="panel" id='skill2'> 
+				<div class="footer"></div>
+			</div>
+			<div class="panel" id='skill3'> 
+				<div class="footer"></div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	// 生成随机颜色函数
+	function getRandomColor() {
+		var letters = '0123456789ABCDEF';
+		var color = '#';
+		for (var i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	}
+
+	// 生成颜色列表
+	function generateColorList(length) {
+		var colorList = [];
+		for (var i = 0; i < length; i++) {
+			colorList.push(getRandomColor());
+		}
+		return colorList;
+	}
+
+
+	$.ajax({
+		url: '/submit_data/', // Django后端的URL
+        success: function(response) {
+            console.log(response); // 处理成功的回调
+			getMoney(response.ToMoonDiamond);
+			info1Data(response.info1);
+			info2Data(response.info2);
+			info3Data(response.info3);
+        },
+        error: function() {
+            console.log('Error'); // 处理错误的回调
+        }
+    });
+
+	function getMoney(Data){
+		$("#tomoonDiamond").text(`${Data.Diamond}`);
+		$("#tomoonMoney").text(`${Data.Money}`);
+	}
+
+	function info1Data(Data){
+		// 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('def'));
+        var option = {
+            title: {
+                text: '近7天钻石收益',
+                textStyle:{
+                    color:"#fff",
+                    fontSize:12
+                },
+                left:"center",
+                top: "5px"
+            },
+            legend: {
+                show:false
+            },
+            series: [
+                {
+                    name: '销量',
+                    type: 'bar',
+                    data: [],
+                    barWidth:20,
+                    itemStyle:{
+                        barBorderRadius: 15,
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#83bff6' },
+                            { offset: 0.5, color: '#188df0' },
+                            { offset: 1, color: '#188df0' }
+                        ])
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#2378f7' },
+                                { offset: 0.7, color: '#2378f7' },
+                                { offset: 1, color: '#83bff6' }
+                            ])
+                        }
+                    }
+                }
+            ],
+            xAxis: {
+                data: [],
+                axisTick:{
+                    show:false
+                },
+                axisLabel:{
+                    color:"#ccc",
+                    interval:0,//间隔0表示每一个都强制显示
+                    rotate:40//旋转角度[-90,90]
+                }
+            },
+            yAxis: {
+                splitLine: {
+                    show: false
+                },
+                axisLabel:{
+                    color:"#fff",
+                    interval:0
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'none'
+                }
+            },
+            grid:{
+                top:50,
+                left:50,
+                right:50,
+                bottom:50
+            }
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+		myChart.setOption({//更新数据
+                xAxis: {
+                    data: Data.x,
+                    axisTick:{
+                        show:false
+                    },
+                    axisLabel:{
+                        color:"#ccc",
+                        interval:0
+                    },
+                    label:{
+                        show:true,
+                        formatter:'{c}'
+                    }
+                },
+                series: [
+                    {
+                        name: '当天钻石收益',
+                        type: 'bar',
+                        data: Data.y,
+                        barWidth:20,
+                        label:{
+                            show:true,
+                            formatter:'{c}'
+                        },
+                        itemStyle:{
+                            barBorderRadius: [10,10,0,0],
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#a583f6' },
+                                { offset: 0.5, color: '#7547de' },
+                                { offset: 1, color: '#4400d9' }
+                            ])
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: '#2378f7' },
+                                    { offset: 0.7, color: '#2378f7' },
+                                    { offset: 1, color: '#83bff6' }
+                                ])
+                            }
+                        }
+                    }
+                ]
+            });
+		window.addEventListener('resize',function(){
+			myChart.resize();
+		})
+	}
+
+	function info2Data(Data){
+		// 基于准备好的dom，初始化echarts实例
+		var myChart = echarts.init(document.getElementById('skill'));
+		// 指定生成颜色列表的长度
+		var numberOfColors = Data.x.length;
+
+		// 生成随机颜色列表
+		var colors = generateColorList(numberOfColors);
+		// 指定图表的配置项和数据
+		var option = {
+			title: {
+				text: '14天内销量Top7',
+				left: 'center',
+				top: '10px',
+				textStyle:{
+					color:"#fff",
+					fontSize:12
+				}
+			},
+			series: {
+				name: '钻石总量',
+				type: 'bar',
+				data: [],
+				barWidth:13,
+				label:{
+					show:true,
+					formatter:'{c}'
+				},
+				itemStyle:{
+					borderRadius: 20,
+					color: function(d){
+						return colors[d.dataIndex]
+					}
+				}
+			},
+			xAxis:{
+				show: false
+			},
+			yAxis:{
+				type: 'category',
+				data: [],
+				axisLabel: {
+					color: '#fff'
+				},
+				axisTick:{
+					show: false
+				},
+				axisLine:{
+					show: false
+				}
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'none'
+				}
+			},
+			grid:{
+				top:30,
+				left:100,
+				right:30,
+				bottom:30
+			}
+		};
+		// 使用刚指定的配置项和数据显示图表。
+		myChart.setOption(option);
+
+		myChart.setOption({//更新数据
+			yAxis:{
+				type: 'category',
+				data: Data.x,
+				axisLabel: {
+					color: '#fff'
+				},
+				axisTick:{
+					show: false
+				},
+				axisLine:{
+					show: false
+				}
+			},
+			series: {
+				name: '钻石总量',
+				type: 'bar',
+				data: Data.y,
+				barWidth:13,
+				label:{
+					show:true,
+					formatter:'{c}'
+				},
+				itemStyle:{
+					borderRadius: 20,
+					color: function(d){
+						return colors[d.dataIndex]
+					}
+				}
+			}
+		});
+
+		window.addEventListener('resize',function(){
+			myChart.resize();
+		})
+	}
+
+	function info3Data(Data){
+		// 基于准备好的dom，初始化echarts实例
+		var myChart = echarts.init(document.getElementById('skill2'));
+		// 指定生成颜色列表的长度
+		var numberOfColors = Data.x.length;
+
+		// 生成随机颜色列表
+		var colors = generateColorList(numberOfColors);
+		// 指定图表的配置项和数据
+		var option = {
+			title: {
+				text: '当天销量Top7',
+				left: 'center',
+				top: '10px',
+				textStyle:{
+					color:"#fff",
+					fontSize:12
+				}
+			},
+			series: {
+				name: '钻石总量',
+				type: 'bar',
+				data: [],
+				barWidth:13,
+				label:{
+					show:true,
+					formatter:'{c}'
+				},
+				itemStyle:{
+					borderRadius: 20,
+					color: function(d){
+						return colors[d.dataIndex]
+					}
+				}
+			},
+			xAxis:{
+				show: false
+			},
+			yAxis:{
+				type: 'category',
+				data: [],
+				axisLabel: {
+					color: '#fff'
+				},
+				axisTick:{
+					show: false
+				},
+				axisLine:{
+					show: false
+				}
+			},
+			tooltip: {
+				trigger: 'axis',
+				axisPointer: {
+					type: 'none'
+				}
+			},
+			grid:{
+				top:30,
+				left:100,
+				right:30,
+				bottom:30
+			}
+		};
+		// 使用刚指定的配置项和数据显示图表。
+		myChart.setOption(option);
+
+		myChart.setOption({//更新数据
+			yAxis:{
+				type: 'category',
+				data: Data.x,
+				axisLabel: {
+					color: '#fff'
+				},
+				axisTick:{
+					show: false
+				},
+				axisLine:{
+					show: false
+				}
+			},
+			series: {
+				name: '钻石总量',
+				type: 'bar',
+				data: Data.y,
+				barWidth:13,
+				label:{
+					show:true,
+					formatter:'{c}'
+				},
+				itemStyle:{
+					borderRadius: 20,
+					color: function(d){
+						return colors[d.dataIndex]
+					}
+				}
+			}
+		});
+
+		window.addEventListener('resize',function(){
+			myChart.resize();
+		})
+	}
+
+</script>
+</html>
